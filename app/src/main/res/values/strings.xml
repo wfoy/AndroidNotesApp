@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AndroidNotesApp</string>
+    <string name="button">Add Note</string>
+    <string name="title_activity_note">Notes</string>
+</resources>
