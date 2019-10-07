@@ -31,18 +31,26 @@ public class MainActivity extends AppCompatActivity {
     private final int REQUEST_CODE = 20;
     private final ArrayList<String> notes = new ArrayList<String>();
     ArrayAdapter<String> itemsAdapter;
+    String last;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //if notes already exist
         if(fileExists("__NOTES__")) {
             String[] entries = open("__NOTES__").split(" ", 0);
             for(int j = 0; j < entries.length; j++)
             {
                 if(entries[j] != null && !entries[j].isEmpty() && !entries[j].equals("") && !entries[j].equals(" ")) {
                     notes.add(entries[j]);
+                }
+            }
+            //deal with extra entry appearing
+            if(notes.size() > 0) {
+                if (!notes.get(notes.size() - 1).equals(last)) {
+                    notes.remove(notes.size() - 1);
                 }
             }
         }
@@ -52,13 +60,8 @@ public class MainActivity extends AppCompatActivity {
         final ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(itemsAdapter);
 
-        for(int g = 0; g < notes.size(); g++)
-        {
-            System.out.println(notes.get(g));
-        }
-
         final int REQUEST_CODE = 20;
-        FloatingActionButton button = findViewById(R.id.button);
+        FloatingActionButton button = findViewById(R.id.button); //add note
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NoteActivity.class);
@@ -67,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listView.setClickable(true);
+        listView.setClickable(true);//click on note
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -77,6 +80,16 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra("Title", name);
                     intent.putExtra("Words", open(name));
                     MainActivity.this.startActivityForResult(intent, REQUEST_CODE);
+                }
+            }
+        });
+
+        FloatingActionButton delbutton = findViewById(R.id.d_button); //delete last note
+        delbutton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(notes.size() > 0) {
+                    notes.remove(notes.size() - 1);
+                    itemsAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -95,16 +108,12 @@ public class MainActivity extends AppCompatActivity {
             if(!name.isEmpty() && name != null && !notes.contains(name) && !name.equals("") && !name.equals(" ")) {
                 int i = notes.indexOf(prev);
                 if(i != -1)
-                    notes.set(i, name);
+                    notes.set(i, name);//update note title
                 else
-                    notes.add(name);
+                    notes.add(name);//add note title if new
             }
+            itemsAdapter.notifyDataSetChanged();
         }
-        for(int g = 0; g < notes.size(); g++)
-        {
-            System.out.print(notes.get(g) + " | ");
-        }
-        itemsAdapter.notifyDataSetChanged();
     }
 
     /** Checks if the file denoted by fileName exists. **/
@@ -153,13 +162,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        //create string of titles of notes
         String toSave = "";
         for(int i = 0; i < notes.size(); i++)
         {
             toSave += notes.get(i) + " ";
         }
 
-        save("__NOTES__", toSave);
+        save("__NOTES__", toSave);//save string of titles to __NOTES__ file
+        if(notes.size() > 0)
+            last = notes.get(notes.size()-1);
     }
 
 }

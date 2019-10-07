@@ -27,11 +27,11 @@ public class NoteActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        title = getIntent().getStringExtra("Title");
+        title = getIntent().getStringExtra("Title"); //set title
         EditText editText = (EditText)findViewById(R.id.note_title);
         editText.setText(title, TextView.BufferType.EDITABLE);
 
-        String word = getIntent().getStringExtra("Words");
+        String word = getIntent().getStringExtra("Words");//set text if already exists
         if (word != null) {
             EditText note = (EditText) findViewById(R.id.note_text);
             note.setText(word, TextView.BufferType.EDITABLE);
@@ -41,7 +41,7 @@ public class NoteActivity extends AppCompatActivity {
         EditText note_word = (EditText)findViewById(R.id.note_text);
         note_word.requestFocus();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);//save
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
