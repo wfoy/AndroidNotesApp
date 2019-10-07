@@ -18,6 +18,8 @@ import java.io.OutputStreamWriter;
 
 public class NoteActivity extends AppCompatActivity {
 
+    String title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +27,7 @@ public class NoteActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String title = getIntent().getStringExtra("Title");
+        title = getIntent().getStringExtra("Title");
         EditText editText = (EditText)findViewById(R.id.note_title);
         editText.setText(title, TextView.BufferType.EDITABLE);
 
@@ -47,6 +49,7 @@ public class NoteActivity extends AppCompatActivity {
                 EditText ttl = (EditText)findViewById(R.id.note_title);
                 EditText note = (EditText)findViewById(R.id.note_text);
                 data.putExtra("Title", ttl.getText().toString());
+                data.putExtra("Rem", title);
                 setResult(RESULT_OK, data);
                 save(ttl.getText().toString(), note.getText().toString());
                 finish();

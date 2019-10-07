@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(fileExists("__NOTES__")) {
-            String[] entries = open("__NOTES__").split(" ");
+            String[] entries = open("__NOTES__").split(" ", 0);
             for(int j = 0; j < entries.length; j++)
             {
-                if(!entries[j].equals("") && !entries[j].equals(" ")) {
+                if(entries[j] != null && !entries[j].isEmpty() && !entries[j].equals("") && !entries[j].equals(" ")) {
                     notes.add(entries[j]);
                 }
             }
@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         final ListView listView = (ListView) findViewById(R.id.list_view);
         listView.setAdapter(itemsAdapter);
+
+        for(int g = 0; g < notes.size(); g++)
+        {
+            System.out.println(notes.get(g));
+        }
 
         final int REQUEST_CODE = 20;
         FloatingActionButton button = findViewById(R.id.button);
@@ -71,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, NoteActivity.class);
                     intent.putExtra("Title", name);
                     intent.putExtra("Words", open(name));
-                    //notes.remove(name);
                     MainActivity.this.startActivityForResult(intent, REQUEST_CODE);
                 }
             }
@@ -86,9 +90,19 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             // Extract name value from result extras
             String name = data.getExtras().getString("Title");
-            if(!notes.contains(name) && !name.equals("") && !name.equals(" ")) {
-                notes.add(name);
+            String prev = data.getExtras().getString("Rem");
+
+            if(!name.isEmpty() && name != null && !notes.contains(name) && !name.equals("") && !name.equals(" ")) {
+                int i = notes.indexOf(prev);
+                if(i != -1)
+                    notes.set(i, name);
+                else
+                    notes.add(name);
             }
+        }
+        for(int g = 0; g < notes.size(); g++)
+        {
+            System.out.print(notes.get(g) + " | ");
         }
         itemsAdapter.notifyDataSetChanged();
     }
