@@ -21,7 +21,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_menu_save" />
 
-    <requestFocus />
     <EditText
         android:id="@+id/note_title"
         android:layout_width="match_parent"
@@ -33,6 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <requestFocus />
     <EditText
         android:id="@+id/note_text"
         android:layout_width="match_parent"
